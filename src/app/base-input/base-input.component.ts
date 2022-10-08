@@ -121,7 +121,7 @@ export class BaseInputComponent implements OnInit {
   get fieldError(): boolean {
      const f = this.controls[this.name];
      // return Object.keys(f.errors ?? ({})).length !==0 && f.touched
-     return f.status === 'INVALID' && f.touched;
+     return f.status === 'INVALID' && f.touched && this.required;
   }
 
 }
