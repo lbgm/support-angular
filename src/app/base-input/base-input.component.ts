@@ -4,8 +4,8 @@ import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'base-input',
   template: `
-    <div #template [formGroup]="group" [ngClass]="{'error': getError, 'focus': focus === true }">
-      <label [ngClass]="{'focus': focus === true}" [for]="name">{{ label }}<span *ngIf="required">&thinsp;*</span></label>
+    <div #template [formGroup]="group" [ngClass]="{fieldError, focus }">
+      <label [for]="name">{{ label }}<span *ngIf="required">&thinsp;*</span></label>
       <ng-content select="[icon]"></ng-content>
       <input
         [id]="name"
@@ -37,12 +37,20 @@ import { FormGroup } from '@angular/forms';
       display: flex;
       align-items: center;
 
-      &.error {
+      &.fieldError {
         border: 1px solid red;
+
+        label {
+          color: red;
+        }
       }
 
       &.focus {
         border: 1px solid #0076a3;
+
+        label {
+          color: #0076a3;
+        }
       }
 
       label {
@@ -59,10 +67,6 @@ import { FormGroup } from '@angular/forms';
         span {
           color: red;
           font-size: 12px;
-        }
-
-        &.focus {
-          color: #0076a3;
         }
       }
 
@@ -88,11 +92,10 @@ export class BaseInputComponent implements OnInit {
   @Input() controls?: any;
   @Input() required: boolean = true;
 
+  @Output() modelEvent: EventEmitter<any> = new EventEmitter();
+
   value: string | number | any;
-
   focus: boolean = false;
-
-  @Output() modelValue: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -112,9 +115,10 @@ export class BaseInputComponent implements OnInit {
 
   input(event: Event) {
     this.value = (event.target as any).value;
+    this.modelEvent.emit(this.value);
   }
 
-  get getError(): boolean {
+  get fieldError(): boolean {
      const f = this.controls[this.name];
      // return Object.keys(f.errors ?? ({})).length !==0 && f.touched
      return f.status === 'INVALID' && f.touched;
