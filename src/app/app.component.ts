@@ -80,12 +80,7 @@ export class AppComponent {
   }
 
   onSubmit() {
-    console.log({
-      form: this.form,
-      values: this.form.value,
-      controls: this.form.controls
-    })
-
+    if(this.form.status === 'INVALID') return alert('le formulaire est invalid !');
     this.form.patchValue({
       file: '/path/file/ertet345637376fdg353cdghd'
     })
