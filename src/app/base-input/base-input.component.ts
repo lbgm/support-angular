@@ -5,7 +5,7 @@ import { FormGroup } from '@angular/forms';
   selector: 'base-input',
   template: `
     <div #template [formGroup]="group" [ngClass]="{'error': getError, 'focus': focus === true }">
-      <label [ngClass]="{'focus': focus === true}" [for]="name">{{ label }}</label>
+      <label [ngClass]="{'focus': focus === true}" [for]="name">{{ label }}<span *ngIf="required">&thinsp;*</span></label>
       <ng-content select="[icon]"></ng-content>
       <input
         [id]="name"
@@ -56,6 +56,11 @@ import { FormGroup } from '@angular/forms';
         padding: 2px;
         user-select: none;
 
+        span {
+          color: red;
+          font-size: 12px;
+        }
+
         &.focus {
           color: #0076a3;
         }
@@ -81,8 +86,9 @@ export class BaseInputComponent implements OnInit {
   @Input() defaultValue?: string;
   @Input() label?: string = "base-input works!";
   @Input() controls?: any;
+  @Input() required: boolean = true;
 
-  value: any;
+  value: string | number | any;
 
   focus: boolean = false;
 
