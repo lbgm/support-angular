@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Input, Output, EventEmitter, OnChanges, SimpleChanges, HostListener } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
@@ -23,8 +23,6 @@ import { FormControl, FormGroup } from '@angular/forms';
         [step]="step"
         [autocomplete]="autoComplete(type)"
         (input)="input($event)"
-        (mouseenter)="focus = true"
-        (mouseleave)="focus = false"
         spellcheck="false"
       />
       <input
@@ -37,8 +35,6 @@ import { FormControl, FormGroup } from '@angular/forms';
         [placeholder]="placeholder"
         [autocomplete]="autoComplete(type)"
         (input)="input($event)"
-        (mouseenter)="focus = true"
-        (mouseleave)="focus = false"
         spellcheck="false"
       />
       <span *ngIf="viewPassword" (click)="showHidePassword=!showHidePassword" data-icon class="view-password">
@@ -174,12 +170,12 @@ export class BaseInputComponent implements OnInit {
   @Input() label?: string = "base-input works!";
   @Input() placeholder?: string = "";
   @Input() controls?: FormControl;
-  @Input() required: boolean = true;
+  @Input() required?: boolean = true;
   @Input() min?: number;
   @Input() max?: number;
   @Input() step?: number;
 
-  @Output() modelEvent: EventEmitter<any> = new EventEmitter();
+  @Output() modelEvent = new EventEmitter<any>();
 
   @ViewChild('icon', { static: true }) iconEl?: ElementRef;
 
@@ -202,7 +198,6 @@ export class BaseInputComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     this.value = changes?.defaultValue?.currentValue;
     this.viewPassword = changes?.type?.currentValue === 'password';
-    console.log({changes});
   }
 
   input(event: Event) {
@@ -233,5 +228,20 @@ export class BaseInputComponent implements OnInit {
     }
     return complete;
   };
+
+  @HostListener('mouseleave', ['$event'])
+  @HostListener('mouseenter', ['$event'])
+  focusOn(event: Event): void {
+   switch (event.type) {
+    case "mouseenter":
+      this.focus = true;
+    break;
+    case "mouseleave":
+      this.focus = false;
+    break;
+    default:
+    break;
+   }
+  }
 
 }

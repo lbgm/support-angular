@@ -18,7 +18,7 @@
         [controls]="formControl"
         [group]="form"
         [required]="true"
-        name="ledingo"
+        name="email"
         type="text"
         label="e-mail"
         class="mb-3"
@@ -33,9 +33,23 @@
         [controls]="formControl"
         [group]="form"
         [required]="true"
-        name="ladinguess"
+        [defaultValue]="'rollroys'"
+        name="vehicle"
         label="Avez vous une voiture ?"
         class="mb-3"
+        (modelEvent)="form.patchValue({'vehicle': $event})"
+      >
+      </base-checkbox>
+
+      <base-checkbox
+        [controls]="formControl"
+        [group]="form"
+        [required]="true"
+        [defaultValue]="'dayang'"
+        name="motorcycle"
+        label="Avez vous un engin ?"
+        class="mb-3"
+        (modelEvent)="form.patchValue({'motorcycle': $event})"
       >
       </base-checkbox>
 

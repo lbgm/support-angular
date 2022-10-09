@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { forwardRef, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -21,7 +21,12 @@ import { BaseCheckboxComponent } from './base-checkbox/base-checkbox.component';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [{provide: Window, useValue: window}],
+  providers: [
+    {
+      provide: Window,
+      useValue: window
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

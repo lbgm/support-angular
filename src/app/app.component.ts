@@ -8,6 +8,11 @@ import {
   addSuccessListener,
 } from "kkiapay";
 
+enum FormEnum {
+  INVALID = 'INVALID',
+  VALID = 'VALID'
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,7 +20,6 @@ import {
 })
 export class AppComponent {
   title: string = 'support-angular';
-  #ngversion: string = "12.2.6";
   loading: boolean = false;
 
   form!: FormGroup;
@@ -39,7 +43,7 @@ export class AppComponent {
   }
 
   test(data: any): void{
-    console.log("payment success...", {data});
+    console.log("payment success...", { data });
   }
 
   successHandler(data : any): void {
@@ -50,11 +54,9 @@ export class AppComponent {
     (window as any).approot = this;
     addSuccessListener(this.successHandler.bind(this) as any)
 
-    this.successHandler({ senou: 'igor' });
-
     // build reactive form control
     this.form = this.reactiveForm.group({
-      ledingo: [
+      email: [
         'ayémi',
         [
           Validators.required,
@@ -63,15 +65,15 @@ export class AppComponent {
         ]
       ],
 
-      ladinguess: [
-        'rollroys',
+      vehicle: [
+        '',
         [
-          Validators.requiredTrue
+          Validators.required,
         ]
       ],
 
-      file: [
-        null,
+      motorcycle: [
+        '',
         [
           Validators.required
         ]
@@ -88,11 +90,9 @@ export class AppComponent {
   }
 
   onSubmit() {
-    if(this.form.controls.ledingo.status === 'VALID') this.form.patchValue({
-      file: '/path/file/ertet345637376fdg353cdghd'
-    })
-
-    if(this.form.status === 'INVALID') return alert('le formulaire est invalid !');
+    if(this.form.status === FormEnum.INVALID) {
+      return this.form.markAllAsTouched();
+    }
 
     this.loading = true;
   }

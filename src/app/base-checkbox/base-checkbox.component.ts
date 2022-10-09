@@ -1,24 +1,24 @@
-import { Component, OnInit, Input, EventEmitter, Output, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, SimpleChanges, HostListener } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'base-checkbox',
   template: `
-    <span class="checkbox-ng" [formGroup]="group">
+    <span class="checkbox-ng" [formGroup]="group" [ngClass]="{ fieldError, focus }">
      <input
-      type="checkbox"
       [checked]="checked"
-      [id]="name"
+      [id]="id"
       [name]="name"
       [formControlName]="name"
       [type]="type"
       [value]="defaultValue"
       (change)="change($event)"
+      ngDefaultControl
      />
      <span class="checkmark" [ngClass]="{ 'checkmark-all': all }"></span>
     </span>
 
-    <label *ngIf="label" [for]="name">
+    <label *ngIf="label" [for]="id" [ngClass]="{ fieldError, focus }">
      {{ label }}<span *ngIf="required">&thinsp;*</span>
     </label>
   `,
@@ -43,6 +43,16 @@ import { FormControl, FormGroup } from '@angular/forms';
           color: red;
           font-size: 12px;
         }
+
+        &.focus {
+          color: #0076a3;
+        }
+
+        &.fieldError {
+          color: red;
+        }
+
+
       }
 
       /* Customize the label (the container) */
@@ -73,6 +83,18 @@ import { FormControl, FormGroup } from '@angular/forms';
 
           &:checked ~ .checkmark::after {
             display: block;
+          }
+        }
+
+        &.fieldError {
+          .checkmark {
+            border: 1px solid red;
+          }
+        }
+
+        &.focus {
+          .checkmark {
+            border: 1px solid #0076a3;
           }
         }
 
@@ -123,23 +145,52 @@ export class BaseCheckboxComponent implements OnInit {
   @Input() defaultValue?: string;
   @Input() label?: string;
   @Input() controls?: FormControl;
-  @Input() required: boolean = true;
+  @Input() required?: boolean = true;
 
-  @Output() modelEvent: EventEmitter<boolean> = new EventEmitter();
+  @Output() modelEvent = new EventEmitter<boolean | string | any>();
+
+  id?: string;
+  focus:boolean = false;
 
   constructor() { }
 
   ngOnInit(): void {
+    this.id = this.name + Math.random().toString(36).substring(2, 9);
+  }
+
+  check (checked: boolean) : void {
+    this.modelEvent.emit(checked ? this.defaultValue ?? checked : undefined);
   }
 
   change(event: Event) {
-    this.modelEvent.emit((event.target as any).checked);
+    const checked = (event.target as any).checked;
+    this.check(checked);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes?.checked?.currentValue) {
-      this.modelEvent.emit(changes?.checked?.currentValue);
+      this.check(changes?.checked?.currentValue);
     }
+  }
+
+  get fieldError(): boolean {
+    const f = (this.controls as any)[this.name] ?? ({});
+    return f.status === 'INVALID' && f.touched && this.required;
+  }
+
+  @HostListener('mouseleave', ['$event'])
+  @HostListener('mouseenter', ['$event'])
+  focusOn(event: Event): void {
+   switch (event.type) {
+    case "mouseenter":
+      this.focus = true;
+    break;
+    case "mouseleave":
+      this.focus = false;
+    break;
+    default:
+    break;
+   }
   }
 
 }
