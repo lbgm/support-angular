@@ -12,15 +12,46 @@ import { FormGroup } from '@angular/forms';
         <ng-content select="[icon-slot]"></ng-content>
       </span>
       <input
+        *ngIf="type==='number'"
         [id]="name"
         [name]="name"
         [formControlName]="name"
         [type]="type"
         [value]="defaultValue"
+        [min]="min"
+        [max]="max"
+        [step]="step"
+        [autocomplete]="autoComplete(type)"
         (input)="input($event)"
         (mouseenter)="focus = true"
         (mouseleave)="focus = false"
+        spellcheck="false"
       />
+      <input
+        *ngIf="type!=='number'"
+        [id]="name"
+        [name]="name"
+        [formControlName]="name"
+        [type]="showHidePassword ? 'text' : type"
+        [value]="defaultValue"
+        [placeholder]="placeholder"
+        [autocomplete]="autoComplete(type)"
+        (input)="input($event)"
+        (mouseenter)="focus = true"
+        (mouseleave)="focus = false"
+        spellcheck="false"
+      />
+      <span *ngIf="viewPassword" (click)="showHidePassword=!showHidePassword" data-icon class="view-password">
+         <svg *ngIf="!showHidePassword" focusable="false" width="20" height="20" viewBox="0 0 20 20">
+           <path d="M3.26 11.6A6.97 6.97 0 0110 6c3.2 0 6.06 2.33 6.74 5.6a.5.5 0 00.98-.2A7.97 7.97 0 0010 5a7.97 7.97 0 00-7.72 6.4.5.5 0 00.98.2z" fill="#c2c2c2"/>
+           <path d="M10 8a3.5 3.5 0 100 7 3.5 3.5 0 000-7zm-2.5 3.5a2.5 2.5 0 115 0 2.5 2.5 0 01-5 0z" fill="#c2c2c2"/>
+         </svg>
+
+         <svg *ngIf="showHidePassword" focusable="false" width="20" height="20" viewBox="0 0 20 20">
+           <path d="M2.85 2.15a.5.5 0 10-.7.7l3.5 3.5a8.1 8.1 0 00-3.37 5.05.5.5 0 10.98.2 7.09 7.09 0 013.1-4.53l1.6 1.59a3.5 3.5 0 104.88 4.89l4.3 4.3a.5.5 0 00.71-.7l-15-15zm9.27 10.68a2.5 2.5 0 11-3.45-3.45l3.45 3.45z" fill="#c2c2c2"></path><path d="M10.12 8l3.38 3.38A3.5 3.5 0 0010.12 8z"/>
+           <path d="M10 6c-.57 0-1.13.07-1.67.21l-.8-.8A7.65 7.65 0 0110 5c3.7 0 6.94 2.67 7.72 6.4a.5.5 0 01-.98.2A6.97 6.97 0 0010 6z" fill="#c2c2c2"/>
+         </svg>
+      </span>
     </div>
   `,
   styles: [
@@ -81,8 +112,14 @@ import { FormGroup } from '@angular/forms';
       [data-icon] {
         display: inline-flex;
         flex-shrink: 0;
+
         &.hasIcon {
           margin-right: 4px;
+        }
+
+        &.view-password {
+          margin: 0 4px;
+          cursor: pointer;
         }
       }
 
@@ -92,6 +129,36 @@ import { FormGroup } from '@angular/forms';
         display: flex;
         flex-grow: 1;
         outline: none;
+        color: #333;
+        background-color: inherit;
+
+        &::placeholder {
+          font-weight: normal;
+        }
+
+        &:-webkit-autofill,
+        &:-webkit-autofill:hover,
+        &:-webkit-autofill:focus,
+        &:-webkit-autofill:active {
+          transition: background-color 5000s ease-in-out 0s;
+        }
+
+        &::-ms-reveal,
+        &::-ms-clear {
+          display: none;
+        }
+
+        /* Chrome, Safari, Edge, Opera */
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+
+        /* Firefox */
+        &[type='number'] {
+          -moz-appearance: textfield;
+        }
       }
     }`
   ]
@@ -105,8 +172,12 @@ export class BaseInputComponent implements OnInit {
   @Input() type!: string;
   @Input() defaultValue?: string;
   @Input() label?: string = "base-input works!";
+  @Input() placeholder?: string = "";
   @Input() controls?: any;
   @Input() required: boolean = true;
+  @Input() min?: number;
+  @Input() max?: number;
+  @Input() step?: number;
 
   @Output() modelEvent: EventEmitter<any> = new EventEmitter();
 
@@ -115,6 +186,8 @@ export class BaseInputComponent implements OnInit {
   value: string | number | any;
   focus: boolean = false;
   hasIcon: boolean = false;
+  viewPassword: boolean = false;
+  showHidePassword: boolean = false;
 
   constructor() { }
 
@@ -127,7 +200,9 @@ export class BaseInputComponent implements OnInit {
   ngAfterViewInit(): void { }
 
   ngOnChanges(changes: SimpleChanges): void {
-   this.value = changes?.defaultValue?.currentValue;
+    this.value = changes?.defaultValue?.currentValue;
+    this.viewPassword = changes?.type?.currentValue === 'password';
+    console.log({changes});
   }
 
   input(event: Event) {
@@ -136,8 +211,27 @@ export class BaseInputComponent implements OnInit {
   }
 
   get fieldError(): boolean {
-     const f = this.controls[this.name] ?? ({});
-     return f.status === 'INVALID' && f.touched && this.required;
+    const f = this.controls[this.name] ?? ({});
+    return f.status === 'INVALID' && f.touched && this.required;
   }
+
+  autoComplete(type: string): string {
+    let complete = '';
+    switch (type) {
+      case 'password':
+        complete = 'new-password';
+        break;
+      case 'text':
+        complete = 'on';
+        break;
+      case 'email':
+        complete = 'on';
+        break;
+      default:
+        complete = 'off';
+        break;
+    }
+    return complete;
+  };
 
 }

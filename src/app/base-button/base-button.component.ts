@@ -44,6 +44,7 @@ import { Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild, AfterVi
 
     button {
       all: unset;
+      color: #333;
       border-radius: 4px;
       border: 1px solid #eee;
       background-color: #fafafa;
