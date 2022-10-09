@@ -4,10 +4,9 @@
 
 
   <div class="card-container">
-    <button class="card card-small" (click)="pay()" tabindex="0">
-      <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-      <span>Pay With Kkiapay</span>
-    </button>
+    <base-button (click)="pay()" text="Pay With Kkiapay">
+      <svg icon class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+    </base-button>
   </div>
 
   <div [ngClass]="{'card-container': true }">
@@ -26,9 +25,14 @@
       <svg icon class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#dedede"/></svg>
     </base-input>
 
-    <button type="submit" class="card card-small" tabindex="0">
+
+    <base-button type="submit" text="Valider" [loading]="loading">
+      <svg icon class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="rgb(105, 103, 103)"/></svg>
+    </base-button>
+
+    <!-- <button type="submit" class="card card-small" tabindex="0">
       <span>Valider</span>
-    </button>
+    </button> -->
 
     </form>
 

@@ -16,6 +16,7 @@ import {
 export class AppComponent {
   title: string = 'support-angular';
   #ngversion: string = "12.2.6";
+  loading: boolean = false;
 
   form!: FormGroup;
 
@@ -26,8 +27,8 @@ export class AppComponent {
   pay(): void {
     openKkiapayWidget({
       amount: 1000,
-      api_key: /*"d950a320d20611ecb68a37334ff14a66"*/ "388d27a0aa1611ecb9755de712bc9e4f",
-      key: /*"d950a320d20611ecb68a37334ff14a66"*/ "388d27a0aa1611ecb9755de712bc9e4f",
+      api_key: "d950a320d20611ecb68a37334ff14a66",
+      key: "d950a320d20611ecb68a37334ff14a66",
       sandbox: true,
       phone: "97000000",
       data: JSON.stringify({
@@ -80,10 +81,13 @@ export class AppComponent {
   }
 
   onSubmit() {
-    if(this.form.status === 'INVALID') return alert('le formulaire est invalid !');
-    this.form.patchValue({
+    if(this.form.controls.ledingo.status === 'VALID') this.form.patchValue({
       file: '/path/file/ertet345637376fdg353cdghd'
     })
+
+    if(this.form.status === 'INVALID') return alert('le formulaire est invalid !');
+
+    this.loading = true;
   }
 
 

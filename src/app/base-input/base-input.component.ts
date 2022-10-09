@@ -27,6 +27,10 @@ import { FormGroup } from '@angular/forms';
       max-width: 300px;
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
     div {
       width: 100%;
       border: 1px solid gray;
@@ -119,8 +123,7 @@ export class BaseInputComponent implements OnInit {
   }
 
   get fieldError(): boolean {
-     const f = this.controls[this.name];
-     // return Object.keys(f.errors ?? ({})).length !==0 && f.touched
+     const f = this.controls[this.name] ?? ({});
      return f.status === 'INVALID' && f.touched && this.required;
   }
 
