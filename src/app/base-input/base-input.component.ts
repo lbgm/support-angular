@@ -1,11 +1,11 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'base-input',
   template: `
     <div [formGroup]="group" [ngClass]="{ fieldError, focus }">
-      <label [for]="name">
+      <label *ngIf="label" [for]="name">
         {{ label }}<span *ngIf="required">&thinsp;*</span>
       </label>
       <span #icon data-icon [ngClass]="{ hasIcon }">
@@ -173,7 +173,7 @@ export class BaseInputComponent implements OnInit {
   @Input() defaultValue?: string;
   @Input() label?: string = "base-input works!";
   @Input() placeholder?: string = "";
-  @Input() controls?: any;
+  @Input() controls?: FormControl;
   @Input() required: boolean = true;
   @Input() min?: number;
   @Input() max?: number;
@@ -211,7 +211,7 @@ export class BaseInputComponent implements OnInit {
   }
 
   get fieldError(): boolean {
-    const f = this.controls[this.name] ?? ({});
+    const f = (this.controls as any)[this.name] ?? ({});
     return f.status === 'INVALID' && f.touched && this.required;
   }
 

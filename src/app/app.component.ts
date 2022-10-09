@@ -63,6 +63,13 @@ export class AppComponent {
         ]
       ],
 
+      ladinguess: [
+        'rollroys',
+        [
+          Validators.requiredTrue
+        ]
+      ],
+
       file: [
         null,
         [

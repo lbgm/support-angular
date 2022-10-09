@@ -14,16 +14,38 @@
 
     <form (ngSubmit)="onSubmit()" [formGroup]="form">
 
-      <base-input [controls]="formControl" [group]="form" [required]="true" name="ledingo" type="text"
-        defaultValue="ayémi" label="e-mail" class="mb-3">
+      <base-input
+        [controls]="formControl"
+        [group]="form"
+        [required]="true"
+        name="ledingo"
+        type="text"
+        label="e-mail"
+        class="mb-3"
+      >
         <svg icon-slot class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
           viewBox="0 0 24 24">
           <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="#c1c1c1" />
         </svg>
       </base-input>
 
+      <base-checkbox
+        [controls]="formControl"
+        [group]="form"
+        [required]="true"
+        name="ladinguess"
+        label="Avez vous une voiture ?"
+        class="mb-3"
+      >
+      </base-checkbox>
 
-      <base-button type="submit" text="Valider" [loading]="loading">
+
+      <base-button
+        type="submit"
+        text="Valider"
+        [loading]="loading"
+        class="mb-3"
+      >
         <svg icon-slot class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
           viewBox="0 0 24 24">
           <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" fill="#c1c1c1" />

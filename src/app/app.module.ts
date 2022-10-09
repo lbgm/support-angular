@@ -6,12 +6,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BaseInputComponent } from './base-input/base-input.component';
 import { BaseButtonComponent } from './base-button/base-button.component';
+import { BaseCheckboxComponent } from './base-checkbox/base-checkbox.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BaseInputComponent,
     BaseButtonComponent,
+    BaseCheckboxComponent,
   ],
   imports: [
     BrowserModule,
