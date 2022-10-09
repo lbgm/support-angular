@@ -4,9 +4,13 @@ import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'base-input',
   template: `
-    <div #template [formGroup]="group" [ngClass]="{fieldError, focus }">
-      <label [for]="name">{{ label }}<span *ngIf="required">&thinsp;*</span></label>
-      <ng-content select="[icon]"></ng-content>
+    <div [formGroup]="group" [ngClass]="{ fieldError, focus }">
+      <label [for]="name">
+        {{ label }}<span *ngIf="required">&thinsp;*</span>
+      </label>
+      <span #icon data-icon [ngClass]="{ hasIcon }">
+        <ng-content select="[icon-slot]"></ng-content>
+      </span>
       <input
         [id]="name"
         [name]="name"
@@ -74,6 +78,14 @@ import { FormGroup } from '@angular/forms';
         }
       }
 
+      [data-icon] {
+        display: inline-flex;
+        flex-shrink: 0;
+        &.hasIcon {
+          margin-right: 4px;
+        }
+      }
+
       input {
         padding: 8px 2px;
         border: 0;
@@ -98,23 +110,24 @@ export class BaseInputComponent implements OnInit {
 
   @Output() modelEvent: EventEmitter<any> = new EventEmitter();
 
+  @ViewChild('icon', { static: true }) iconEl?: ElementRef;
+
   value: string | number | any;
   focus: boolean = false;
+  hasIcon: boolean = false;
 
   constructor() { }
 
   ngOnInit(): void {
+    this.hasIcon = ((this.iconEl ?? ({}))?.nativeElement?.innerHTML ?? '').trim() !== '';
   }
 
-  ngAfterViewInit(): void {
-    console.log({
-      template: this.template
-    })
-  }
+  ngAfterContentInit(): void { }
+
+  ngAfterViewInit(): void { }
 
   ngOnChanges(changes: SimpleChanges): void {
    this.value = changes?.defaultValue?.currentValue;
-   console.log({changes});
   }
 
   input(event: Event) {

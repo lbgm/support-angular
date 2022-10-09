@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild, AfterViewInit } from '@angular/core';
 
 @Component({
   selector: 'base-button',
@@ -6,10 +6,10 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
     <button
       [title]="text"
       [type]="type"
-      [ngClass]="{ld: loading}" tabindex="0"
+      [ngClass]="{ loading }" tabindex="0"
     >
-      <span data-icon *ngIf="!loading">
-        <ng-content select="[icon]"></ng-content>
+      <span data-icon #icon [ngClass]="{ hasIcon, loading }">
+        <ng-content select="[icon-slot]"></ng-content>
       </span>
       <span data-text *ngIf="!loading">{{ text }}</span>
       <span data-loader *ngIf="loading">
@@ -59,7 +59,7 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
       user-select: none;
       will-change: opacity, cursor, pointer-events, transform, box-shadow, padding;
 
-      &.ld {
+      &.loading {
         cursor: none;
         pointer-events: none;
         opacity: 0.8;
@@ -81,7 +81,13 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
         flex-shrink: 0;
 
         &[data-icon] {
-         margin-right: 8px;
+          &.hasIcon {
+            margin-right: 8px;
+          }
+
+          &.loading {
+            display: none;
+          }
         }
 
         &[data-text] {
@@ -129,15 +135,20 @@ export class BaseButtonComponent implements OnInit {
   @Input() text?: string = 'Valider';
   @Input() loading?: boolean = false;
   @Input() type?: string = 'button';
+  @ViewChild('icon', { static: true }) iconEl?: ElementRef;
+
+  hasIcon: boolean = false;
 
   constructor() { }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log({'base-button-changes': changes});
-  }
+  ngOnChanges(changes: SimpleChanges): void { }
 
   ngOnInit(): void {
-    console.log({'base-button': this})
+    this.hasIcon = ((this.iconEl ?? ({}))?.nativeElement?.innerHTML ?? '').trim() !== '';
   }
+
+  ngAfterViewInit (): void { }
+
+  ngAfterContentInit(): void { }
 
 }
