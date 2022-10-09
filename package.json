@@ -9,7 +9,7 @@
     "test": "ng test",
 
     "b-build":"ng build --output-hashing=none",
-    "b-package":" cat dist/on-web/{polyfills-es20*,runtime-es20*,main-es20*}.js > ./supportAngular.js",
+    "b-package":" cat dist/support-angular/{polyfills-es20*,runtime-es20*,main-es20*}.js > ./supportAngular.js",
     "bundle":"npm run b-build && npm run b-package"
   },
   "private": true,
