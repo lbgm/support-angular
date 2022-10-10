@@ -12,6 +12,10 @@
     "b-package":" cat dist/support-angular/{polyfills,runtime,main}.js > ./supportAngular.js",
     "bundle":"npm run b-build && npm run b-package"
   },
+  "engines": {
+    "node": ">=14.18.3",
+    "npm": ">=6.14.15"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~12.2.0",
