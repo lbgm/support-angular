@@ -31,9 +31,9 @@ export class AppComponent {
   pay(): void {
     openKkiapayWidget({
       amount: 1000,
-      api_key: "d950a320d20611ecb68a37334ff14a66",
-      key: "d950a320d20611ecb68a37334ff14a66",
-      sandbox: true,
+      api_key: "",
+      key: "",
+      sandbox: false,
       phone: "97000000",
       data: JSON.stringify({
         amount: 1000,
