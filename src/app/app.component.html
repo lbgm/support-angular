@@ -14,6 +14,21 @@
 
     <form (ngSubmit)="onSubmit()" [formGroup]="form">
 
+      <lbgm-phone-input
+        class="mb-3"
+        [arrow]="true"
+        [label]="'N° de téléphone'"
+        [required]="true"
+        [allowed]="[]"
+        [name]="'phone'"
+        [group]="form"
+        [controls]="formControl"
+        (phoneEvent)="form.patchValue({ 'phone': $event})"
+        (phoneData)="phone=$event"
+        (country)="phoneCountry=$event"
+      >
+      </lbgm-phone-input>
+
       <base-input
         [controls]="formControl"
         [group]="form"

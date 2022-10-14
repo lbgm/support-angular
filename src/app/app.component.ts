@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { PhoneDATA } from '@lbgm/phone-input';
 
 import {
   openKkiapayWidget,
@@ -23,6 +24,9 @@ export class AppComponent {
   loading: boolean = false;
 
   form!: FormGroup;
+
+  phone: PhoneDATA = {};
+  phoneCountry: string = '';
 
   constructor(private reactiveForm: FormBuilder) {
 
@@ -76,6 +80,13 @@ export class AppComponent {
         '',
         [
           Validators.required
+        ]
+      ],
+
+      phone: [
+        '',
+        [
+          Validators.required,
         ]
       ]
     })
